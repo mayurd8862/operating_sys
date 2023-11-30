@@ -1,0 +1,1209 @@
+#####shell Programming
+
+
+a) Write a shell program to print given number in reverse order
+#!/bin/bash
+
+# Shell Script to Print a Number in Reverse Order
+
+echo "Enter a number:"
+read number
+
+reverse=""
+len=${#number}
+
+for (( i = len - 1; i >= 0; i-- )); do
+    reverse="${reverse}${number:i:1}"
+done
+
+echo "Number in Reverse Order: $reverse"
+
+
+#### another approach
+
+#!/bin/bash
+
+reverse_number() {
+    local num=$1
+    local reversed=$(echo "$num" | rev)
+    echo "$reversed"
+}
+
+# Main program
+echo "Enter a number:"
+read input
+
+# Check if the input is a valid number
+if ! [[ "$input" =~ ^[0-9]+$ ]]; then
+    echo "Invalid input. Please enter a number."
+    exit 1
+fi
+
+# Call the function to reverse the number
+result=$(reverse_number "$input")
+
+echo "Reversed Number: $result"
+
+
+
+
+
+b) write a shell program to perform arithmetic operations uisng case
+
+#!/bin/bash
+
+while true; do
+    echo "Enter first number (or type 'exit' to end):"
+    read input
+
+    # Check if the user wants to exit
+    if [ "$input" == "exit" ]; then
+        echo "Exiting the script."
+        break
+    fi
+
+    # Check if the input is a valid number
+    if ! [[ "$input" =~ ^[0-9]+$ ]]; then
+        echo "Invalid input. Please enter a number."
+        continue
+    fi
+
+    num1=$input
+
+    echo "Enter second number:"
+    read num2
+
+    # Check if the input is a valid number
+    if ! [[ "$num2" =~ ^[0-9]+$ ]]; then
+        echo "Invalid input. Please enter a number."
+        continue
+    fi
+
+    echo "Select operation:"
+    echo "1. Addition"
+    echo "2. Subtraction"
+    echo "3. Multiplication"
+    echo "4. Division"
+    echo "5. Modulus"
+    echo "6. Exit"
+
+    read choice
+
+    case $choice in
+        1)
+            result=$((num1 + num2))
+            operation="Addition"
+            ;;
+        2)
+            result=$((num1 - num2))
+            operation="Subtraction"
+            ;;
+        3)
+            result=$((num1 * num2))
+            operation="Multiplication"
+            ;;
+        4)
+            if [ $num2 -eq 0 ]; then
+                echo "Cannot divide by zero!"
+                continue
+            fi
+            result=$(echo "scale=2; $num1 / $num2" | bc)
+            operation="Division"
+            ;;
+        5)
+            result=$((num1 % num2))
+            operation="Modulus"
+            ;;
+        6)
+            echo "Exiting the script."
+            break
+            ;;
+        *)
+            echo "Invalid choice!"
+            continue
+            ;;
+    esac
+    echo "$operation Result: $result"
+done
+
+
+
+
+c) Write a  shell script to check file type and permissions of a given input by user
+
+#!/bin/bash
+
+# Shell Script to Check File Type and Permissions
+
+echo "Enter the file path:"
+read filepath
+
+# Check if the file exists
+if [ -e "$filepath" ]; then
+    echo "File '$filepath' exists."
+
+    # Check file type
+    if [ -f "$filepath" ]; then
+        echo "File Type: Regular File"
+    elif [ -d "$filepath" ]; then
+        echo "File Type: Directory"
+    else
+        echo "File Type: Other"
+    fi
+
+    # Check file permissions
+    echo "File Permissions:"
+    echo "Readable: $( [ -r "$filepath" ] && echo "Yes" || echo "No" )"
+    echo "Writable: $( [ -w "$filepath" ] && echo "Yes" || echo "No" )"
+    echo "Executable: $( [ -x "$filepath" ] && echo "Yes" || echo "No" )"
+else
+    echo "File '$filepath' does not exist."
+fi
+
+
+
+
+
+d) Write a shell script to Find factorial of a given number using function
+
+#!/bin/bash
+
+# Function to calculate factorial
+calculate_factorial() {
+    local num=$1
+    local result=1
+
+    for ((i = 1; i <= num; i++)); do
+        result=$((result * i))
+    done
+
+    echo $result
+}
+
+# Main script
+echo "Enter a number:"
+read number
+
+# Check if the input is a non-negative integer
+if [[ $number =~ ^[0-9]+$ ]]; then
+    factorial=$(calculate_factorial $number)
+    echo "Factorial of $number is: $factorial"
+else
+    echo "Please enter a non-negative integer."
+fi
+
+
+
+
+
+e) Write a shell script to reverse a string
+
+#!/bin/bash
+
+# Function to reverse a string
+reverse_string() {
+    local input=$1
+    local reversed=""
+
+    for ((i = ${#input} - 1; i >= 0; i--)); do
+        reversed="${reversed}${input:$i:1}"
+    done
+
+    echo "$reversed"
+}
+
+# Main script
+echo "Enter a string:"
+read user_input
+
+reversed_result=$(reverse_string "$user_input")
+
+echo "Reversed string: $reversed_result"
+
+
+
+
+
+
+f) White a shell script to print fibonacci series
+
+#!/bin/bash
+
+# Function to generate Fibonacci series up to n terms
+generate_fibonacci() {
+    local n=$1
+    local a=0
+    local b=1
+
+    echo "Fibonacci series up to $n terms:"
+    
+    for ((i = 1; i <= n; i++)); do
+        echo -n "$a "
+        temp=$((a + b))
+        a=$b
+        b=$temp
+    done
+
+    echo
+}
+
+# Main script
+echo "Enter the number of terms for Fibonacci series:"
+read num_terms
+
+generate_fibonacci "$num_terms"
+
+
+
+
+
+
+*****************************************************************************
+
+
+
+
+
+### Implement Bankers algorithm for deadlock avoidance and find out a safe sequence for processes.
+
+
+#include <stdio.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+int available[MAX_RESOURCES];
+int maximum[MAX_PROCESSES][MAX_RESOURCES];
+int allocation[MAX_PROCESSES][MAX_RESOURCES];
+int need[MAX_PROCESSES][MAX_RESOURCES];
+int n, m; // Number of processes and resources
+
+void initialize() {
+    // Initialize available, maximum, allocation, and need matrices
+    // ...
+
+    // Example Initialization
+    n = 5; // Number of processes
+    m = 3; // Number of resources
+
+    int avail[] = {3, 3, 2};
+    int max[][MAX_RESOURCES] = {{7, 5, 3}, {3, 2, 2}, {9, 0, 2}, {2, 2, 2}, {4, 3, 3}};
+    int alloc[][MAX_RESOURCES] = {{0, 1, 0}, {2, 0, 0}, {3, 0, 2}, {2, 1, 1}, {0, 0, 2}};
+
+    for (int i = 0; i < m; i++) {
+        available[i] = avail[i];
+        for (int j = 0; j < n; j++) {
+            maximum[j][i] = max[j][i];
+            allocation[j][i] = alloc[j][i];
+            need[j][i] = maximum[j][i] - allocation[j][i];
+        }
+    }
+}
+
+int is_safe(int process, int work[], int finish[]) {
+    // Check if it's safe to grant resources to the process
+    for (int i = 0; i < m; i++) {
+        if (need[process][i] > work[i] || finish[process])
+            return 0;
+    }
+    return 1;
+}
+
+void bankers_algorithm() {
+    int work[MAX_RESOURCES];
+    int finish[MAX_PROCESSES];
+
+    // Initialize work and finish arrays
+    for (int i = 0; i < m; i++)
+        work[i] = available[i];
+
+    for (int i = 0; i < n; i++)
+        finish[i] = 0;
+
+    int safe_sequence[MAX_PROCESSES];
+    int count = 0;
+
+    while (count < n) {
+        int found = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!finish[i] && is_safe(i, work, finish)) {
+                // Grant resources to process i
+                for (int j = 0; j < m; j++) {
+                    work[j] += allocation[i][j];
+                }
+
+                safe_sequence[count++] = i;
+                finish[i] = 1;
+                found = 1;
+            }
+        }
+
+        if (!found) {
+            printf("System is not in a safe state!\n");
+            return;
+        }
+    }
+
+    printf("System is in a safe state. Safe sequence: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", safe_sequence[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    initialize();
+    bankers_algorithm();
+
+    return 0;
+}
+
+
+
+
+
+**************************************************************************
+
+
+
+#### Write a program demonstrating use of different system calls.
+•	process related system all:fork,wait,
+•	file related:open ,read,write,close
+•	protection: chmod
+
+
+
+a) process related system all:fork,wait,
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h> // Include this header for the wait function
+
+int main() {
+    pid_t ret_value;
+
+    printf("\nThe process id is %d\n", getpid());
+
+    ret_value = fork();
+
+    if (ret_value < 0) {
+        // fork has failed
+        printf("\nFork Failure\n");
+    } 
+    else if (ret_value == 0) {
+        // child process
+        printf("\nChild Process\n");
+        printf("The process id is %d\n", getpid());
+        // Uncomment the line below to add a delay in the child process
+        sleep(3);
+    } 
+    else {
+        // parent process
+        wait(NULL); // Use wait here to wait for the child process to complete
+        printf("Parent Process\n");
+        printf("The process id is %d\n", getpid());
+        // Uncomment the line below to add a delay in the parent process
+        // sleep(30);
+    }
+
+    return 0;
+}
+
+
+
+b) file related:open ,read,write,close
+
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+
+int main() {
+    int fd; // store file descripter 0 - standard input, 1 - standard otpt, 2 - standard error
+    char buffer[50];
+    char msg[50] = "hello ifocus institute";
+
+    fd = open("new.txt", O_RDWR);
+
+    if (fd != -1) {
+        printf("fd = %d\n", fd);
+        printf("new.txt opened with read write access\n");
+
+        write(fd, msg, sizeof(msg));
+
+        lseek(fd, 0, SEEK_SET);
+
+        read(fd, buffer, sizeof(msg));
+
+        printf("%s was written to my file\n", buffer);
+
+        close(fd);
+    } else {
+        perror("open");
+    }
+
+    return 0;
+}
+
+
+
+c) Combined 
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+void processRelatedCalls() {
+    pid_t childPid;
+
+    printf("Process Related System Calls\n");
+
+    // Forking a child process
+    childPid = fork();
+
+    if (childPid == 0) {
+        // Child process
+        printf("Child Process: PID=%d, Parent PID=%d\n", getpid(), getppid());
+        exit(0);
+    } else if (childPid > 0) {
+        // Parent process
+        printf("Parent Process: PID=%d, Created Child PID=%d\n", getpid(), childPid);
+
+        // Waiting for the child to complete
+        wait(NULL);
+        printf("Child Process Completed\n");
+    } else {
+        perror("Fork failed");
+    }
+}
+
+void fileRelatedCalls() {
+    int fileDescriptor;
+    char buffer[50];
+    ssize_t bytesRead;
+
+    printf("\nFile Related System Calls\n");
+
+    // Open a file
+    fileDescriptor = open("example.txt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+
+    if (fileDescriptor == -1) {
+        perror("File open failed");
+        return;
+    }
+
+    // Write to the file
+    write(fileDescriptor, "Hello, World!\n", 13);
+
+    // Move the file cursor to the beginning
+    lseek(fileDescriptor, 0, SEEK_SET);
+
+    // Read from the file
+    bytesRead = read(fileDescriptor, buffer, sizeof(buffer));
+
+    printf("Read from file: %.*s", (int)bytesRead, buffer);
+
+    // Close the file
+    close(fileDescriptor);
+}
+
+void protectionRelatedCalls() {
+    printf("\nProtection Related System Calls\n");
+
+    // Change file permissions
+    if (chmod("example.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == -1) {
+        perror("chmod failed");
+    }
+}
+
+int main() {
+    processRelatedCalls();
+    fileRelatedCalls();
+    protectionRelatedCalls();
+
+    return 0;
+}
+
+
+
+
+
+***************************************************************************
+
+
+
+
+5) Implementation of Classical problem Reader Writer using Threads and Mutex
+
+
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#include <unistd.h>
+
+#define MAX_ITERATIONS 20 // Define the maximum number of iterations
+
+sem_t mutex, wrt;
+int data = 0;
+int reader_count = 0;
+int iterations = 0;
+
+void* reader(void* arg) {
+    while (1) {
+        sem_wait(&mutex);
+        reader_count++;
+        if (reader_count == 1) {
+            sem_wait(&wrt);
+        }
+        sem_post(&mutex);
+
+        // Reading data
+        printf("Reader %ld read data: %d\n", (long)arg, data);
+
+        sem_wait(&mutex);
+        reader_count--;
+        if (reader_count == 0) {
+            sem_post(&wrt);
+        }
+        sem_post(&mutex);
+
+        iterations++;
+        if (iterations >= MAX_ITERATIONS) {
+            break;
+        }
+        sleep(1); // Sleep to simulate reading
+    }
+    pthread_exit(NULL);
+}
+
+void* writer(void* arg) {
+    while (1) {
+        sem_wait(&wrt);
+        data++; // Increment data to simulate writing
+        printf("Writer %ld wrote data: %d\n", (long)arg, data);
+        sem_post(&wrt);
+
+        iterations++;
+        if (iterations >= MAX_ITERATIONS) {
+            break;
+        }
+        sleep(1); // Sleep to simulate writing
+    }
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t readers[2];
+    pthread_t writers[2];
+
+    sem_init(&mutex, 0, 1);
+    sem_init(&wrt, 0, 1);
+
+    for (long i = 0; i < 2; i++) {
+        pthread_create(&readers[i], NULL, reader, (void*)i);
+        pthread_create(&writers[i], NULL, writer, (void*)i);
+    }
+
+    for (int i = 0; i < 2; i++) {
+        pthread_join(readers[i], NULL);
+        pthread_join(writers[i], NULL);
+    }
+
+    sem_destroy(&mutex);
+    sem_destroy(&wrt);
+
+    return 0;
+}
+
+
+
+
+***************************************************************************
+
+
+
+
+6) Implementation of Classical problems Producer Consumer using Threads and Semaphore.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define BUFFER_SIZE 5
+
+int buffer[BUFFER_SIZE];
+
+// Variables for tracking the index to insert and remove items from the buffer
+int in = 0; // Index for inserting items
+int out = 0; // Index for removing items
+
+// Semaphore declarations synchronization mechanism used in concurrent programming to control access to shared resources
+sem_t empty; // Semaphore to track empty slots in the buffer
+sem_t full;  // Semaphore to track filled slots in the buffer
+
+// Producer function
+void* producer(void* arg) {
+    int item;
+    for (int i = 0; i < 10; i++) {
+        item = rand() % 100; // Generate a random item
+
+        sem_wait(&empty); // Wait if the buffer is full
+        buffer[in] = item; // Add the item to the buffer
+        printf("Producer produced: %d\n", item);
+        in = (in + 1) % BUFFER_SIZE; // Move the insert index
+        sem_post(&full); // Signal that a slot is filled
+    }
+    pthread_exit(NULL);
+}
+
+// Consumer function
+void* consumer(void* arg) {
+    int item;
+    for (int i = 0; i < 10; i++) {
+        sem_wait(&full); // Wait if the buffer is empty
+        item = buffer[out]; // Remove an item from the buffer
+        printf("Consumer consumed: %d\n", item);
+        out = (out + 1) % BUFFER_SIZE; // Move the remove index
+        sem_post(&empty); // Signal that a slot is empty
+    }
+    pthread_exit(NULL);
+}
+
+int main() {
+    // Initialize semaphores
+    sem_init(&empty, 0, BUFFER_SIZE); // All slots are initially empty
+    sem_init(&full, 0, 0); // No slots are initially full
+
+    // Create producer and consumer threads
+    pthread_t producer_thread, consumer_thread;
+    pthread_create(&producer_thread, NULL, producer, NULL);
+    pthread_create(&consumer_thread, NULL, consumer, NULL);
+
+    // Wait for threads to finish
+    pthread_join(producer_thread, NULL);
+    pthread_join(consumer_thread, NULL);
+
+    // Destroy semaphores
+    sem_destroy(&empty);
+    sem_destroy(&full);
+
+    return 0;
+}
+
+
+
+
+
+******************************************************************************
+
+
+
+7) Implement following CPU scheduling algorithms and calculate response time and average waiting time for each algorithm.
+•	SJF
+•	FCFS
+•	Round Robin
+•	Priority Scheduling (Preemtive and non- preemtive )
+
+
+#### Total 
+
+#include <iostream>
+#include <vector>
+#define MAX_PROCESS 10
+using namespace std;
+
+int num_of_process;
+vector<int> arrival_time(MAX_PROCESS);
+vector<int> burst_time(MAX_PROCESS);
+vector<int> completion_time(MAX_PROCESS);
+vector<int> waiting_time(MAX_PROCESS);
+vector<int> turnaround_time(MAX_PROCESS);
+vector<int> response_time(MAX_PROCESS);
+
+void getProcessInfo()
+{
+    cout << "Enter total number of processes (maximum " << MAX_PROCESS << "): ";
+    cin >> num_of_process;
+
+    if (num_of_process < 1 || num_of_process > MAX_PROCESS)
+    {
+        cout << "Invalid number of processes. Please enter a number between 1 and " << MAX_PROCESS << "." << endl;
+        exit(1);
+    }
+
+    for (int i = 0; i < num_of_process; i++)
+    {
+        cout << "\nProcess " << i + 1 << ":\n";
+        cout << "Arrival Time: ";
+        cin >> arrival_time[i];
+        cout << "Burst Time: ";
+        cin >> burst_time[i];
+    }
+}
+
+void calculateFCFS()
+{
+    int current_time = 0;
+
+    for (int i = 0; i < num_of_process; i++)
+    {
+        response_time[i] = current_time - arrival_time[i];
+        completion_time[i] = (current_time < arrival_time[i]) ? arrival_time[i] + burst_time[i] : current_time + burst_time[i];
+        current_time = completion_time[i];
+        waiting_time[i] = completion_time[i] - burst_time[i] - arrival_time[i];
+        turnaround_time[i] = completion_time[i] - arrival_time[i];
+    }
+}
+
+void calculateSJF()
+{
+    for (int i = 0; i < num_of_process - 1; i++)
+    {
+        for (int j = 0; j < num_of_process - i - 1; j++)
+        {
+            if (burst_time[j] > burst_time[j + 1])
+            {
+                int temp_burst = burst_time[j];
+                burst_time[j] = burst_time[j + 1];
+                burst_time[j + 1] = temp_burst;
+                int temp_arrival = arrival_time[j];
+                arrival_time[j] = arrival_time[j + 1];
+                arrival_time[j + 1] = temp_arrival;
+            }
+        }
+    }
+
+    int current_time = 0;
+
+    for (int i = 0; i < num_of_process; i++)
+    {
+        response_time[i] = current_time - arrival_time[i];
+        completion_time[i] = (current_time < arrival_time[i]) ? arrival_time[i] + burst_time[i] : current_time + burst_time[i];
+        current_time = completion_time[i];
+        waiting_time[i] = completion_time[i] - burst_time[i] - arrival_time[i];
+        turnaround_time[i] = completion_time[i] - arrival_time[i];
+    }
+}
+
+void calculateRoundRobin(int time_quantum)
+{
+    vector<int> remaining_time(num_of_process);
+    for (int i = 0; i < num_of_process; i++)
+    {
+        remaining_time[i] = burst_time[i];
+    }
+
+    int current_time = 0;
+
+    while (true)
+    {
+        bool done = true;
+
+        for (int i = 0; i < num_of_process; i++)
+        {
+            if (remaining_time[i] > 0)
+            {
+                done = false;
+
+                if (remaining_time[i] > time_quantum)
+                {
+                    current_time += time_quantum;
+                    remaining_time[i] -= time_quantum;
+                }
+                else
+                {
+                    current_time += remaining_time[i];
+                    completion_time[i] = current_time;
+                    waiting_time[i] = current_time - burst_time[i] - arrival_time[i];
+                    turnaround_time[i] = completion_time[i] - arrival_time[i];
+                    remaining_time[i] = 0;
+                }
+            }
+        }
+
+        if (done)
+        {
+            break;
+        }
+    }
+}
+
+void calculateAverageTimes(float &avg_waiting_time, float &avg_turnaround_time)
+{
+    avg_waiting_time = 0.0;
+    avg_turnaround_time = 0.0;
+
+    for (int i = 0; i < num_of_process; i++)
+    {
+        avg_waiting_time += waiting_time[i];
+        avg_turnaround_time += turnaround_time[i];
+    }
+
+    avg_waiting_time /= num_of_process;
+    avg_turnaround_time /= num_of_process;
+}
+
+void displayResults(float avg_waiting_time, float avg_turnaround_time)
+{
+    cout << "\nProcess\tArrival Time\tBurst Time\tCompletion Time\tWaiting Time\tTurnaround Time\tResponse Time" << endl;
+    for (int i = 0; i < num_of_process; i++)
+    {
+        cout << i + 1 << "\t" << arrival_time[i] << "\t\t" << burst_time[i] << "\t\t" << completion_time[i] << "\t\t" << waiting_time[i] << "\t\t" << turnaround_time[i] << "\t\t" << response_time[i] << endl;
+    }
+
+    cout << "\nAverage Waiting Time: " << avg_waiting_time << endl;
+    cout << "Average Turnaround Time: " << avg_turnaround_time << endl;
+}
+
+int main()
+{
+    int selected_algorithm;
+    int time_quantum;
+
+    cout << "Select a scheduling algorithm:" << endl;
+    cout << "1. FCFS (First-Come-First-Served)" << endl;
+    cout << "2. SJF (Shortest Job First)" << endl;
+    cout << "3. Round Robin" << endl;
+    cout << "Enter your choice: ";
+    cin >> selected_algorithm;
+
+    getProcessInfo();
+
+    switch (selected_algorithm)
+    {
+    case 1:
+        calculateFCFS();
+        break;
+    case 2:
+        calculateSJF();
+        break;
+    case 3:
+        cout << "Enter Time Quantum for Round Robin: ";
+        cin >> time_quantum;
+        calculateRoundRobin(time_quantum);
+        break;
+    default:
+        cout << "Invalid choice. Please select a valid scheduling algorithm." << endl;
+        return 1;
+    }
+
+    float avg_waiting_time, avg_turnaround_time;
+    calculateAverageTimes(avg_waiting_time, avg_turnaround_time);
+
+    displayResults(avg_waiting_time, avg_turnaround_time);
+
+    return 0;
+}
+
+
+//TAT = Completion Time - Arrival Time
+//WT = Turnaround Time - Burst Time
+
+
+
+
+a) first come first serve (FCFS)
+#include <iostream>
+#include <vector>
+#define MAX_PROCESS 10
+using namespace std;
+
+int num_of_process;
+vector<int> arrival_time(MAX_PROCESS);
+vector<int> burst_time(MAX_PROCESS);
+vector<int> completion_time(MAX_PROCESS);
+vector<int> waiting_time(MAX_PROCESS);
+vector<int> turnaround_time(MAX_PROCESS);
+vector<int> response_time(MAX_PROCESS);
+
+void getProcessInfo()
+{
+
+    cout << "Enter total number of processes (maximum " << MAX_PROCESS << "): ";
+    cin >> num_of_process;
+
+    if (num_of_process < 1 || num_of_process > MAX_PROCESS)
+    {
+        cout << "Invalid number of processes. Please enter a number between 1 and " << MAX_PROCESS << "." << endl;
+        exit(1);
+    }
+
+    for (int i = 0; i < num_of_process; i++)
+    {
+
+        cout << "\nProcess " << i + 1 << ":\n";
+        cout << "Arrival Time: ";
+        cin >> arrival_time[i];
+        cout << "Burst Time: ";
+        cin >> burst_time[i];
+    }
+
+}
+
+
+void calculateFCFS()
+{
+    int current_time = 0;
+    for (int i = 0; i < num_of_process; i++)
+    {
+        response_time[i] = current_time - arrival_time[i];
+        completion_time[i] = (current_time < arrival_time[i]) ? arrival_time[i] + burst_time[i] : current_time + burst_time[i];
+        current_time = completion_time[i];
+        waiting_time[i] = completion_time[i] - burst_time[i] - arrival_time[i];
+        turnaround_time[i] = completion_time[i] - arrival_time[i];
+    }
+
+}
+
+
+void calculateAverageTimes(float &avg_waiting_time, float &avg_turnaround_time)
+{
+    avg_waiting_time = 0.0;
+    avg_turnaround_time = 0.0;
+
+    for (int i = 0; i < num_of_process; i++)
+    {
+        avg_waiting_time += waiting_time[i];
+        avg_turnaround_time += turnaround_time[i];
+    }
+
+    avg_waiting_time /= num_of_process;
+    avg_turnaround_time /= num_of_process;
+}
+
+
+void displayResults(float avg_waiting_time, float avg_turnaround_time)
+{
+    
+    cout << "\nProcess\tArrival Time\tBurst Time\tCompletion Time\tWaiting Time\tTurnaround Time\tResponse Time" << endl;
+   
+    for (int i = 0; i < num_of_process; i++)    
+    {        
+        cout << i + 1 << "\t" << arrival_time[i] << "\t\t" << burst_time[i] << "\t\t" << completion_time[i] << "\t\t" << waiting_time[i] << "\t\t" << turnaround_time[i] << "\t\t" << response_time[i] << endl;        
+    }
+   
+    cout << "\nAverage Waiting Time: " << avg_waiting_time << endl;    
+    cout << "Average Turnaround Time: " << avg_turnaround_time << endl;
+    
+}
+
+
+int main()
+
+{
+    int selected_algorithm;
+    cout << "First come first serve" << endl;
+
+    getProcessInfo();
+
+    calculateFCFS();
+
+    float avg_waiting_time, avg_turnaround_time;
+    calculateAverageTimes(avg_waiting_time, avg_turnaround_time);
+    displayResults(avg_waiting_time, avg_turnaround_time);
+    return 0;
+}
+
+
+
+
+
+
+
+*******************************************************************************
+
+
+
+9) Implement Page Replacement algorithms. and calculate page faults w.r.t. each page replacement algorithm.
+•	FIFO
+•	LRU
+•	Optimal Page Replacement
+
+
+
+#include <stdio.h>
+#include <stdbool.h>
+
+// FIFO Page Replacement Algorithm
+int fifo_page_faults(int reference_string[], int n, int frame_size) {
+    int page_table[frame_size];
+    int page_faults = 0;
+    int front = 0;
+
+    for (int i = 0; i < frame_size; i++) {
+        page_table[i] = -1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        bool page_found = false;
+        int page = reference_string[i];
+
+        for (int j = 0; j < frame_size; j++) {
+            if (page_table[j] == page) {
+                page_found = true;
+                break;
+            }
+        }
+
+        if (!page_found) {
+            page_table[front] = page;
+            front = (front + 1) % frame_size;
+            page_faults++;
+        }
+    }
+
+    return page_faults;
+}
+
+// LRU Page Replacement Algorithm
+int lru_page_faults(int reference_string[], int n, int frame_size) {
+    int page_table[frame_size];
+    int page_faults = 0;
+
+    for (int i = 0; i < frame_size; i++) {
+        page_table[i] = -1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        bool page_found = false;
+        int page = reference_string[i];
+
+        for (int j = 0; j < frame_size; j++) {
+            if (page_table[j] == page) {
+                page_found = true;
+                // Move the accessed page to the end of the table (most recently used)
+                for (int k = j; k < frame_size - 1; k++) {
+                    page_table[k] = page_table[k + 1];
+                }
+                page_table[frame_size - 1] = page;
+                break;
+            }
+        }
+
+        if (!page_found) {
+            // If a page fault occurs, replace the first page (least recently used)
+            for (int j = 0; j < frame_size - 1; j++) {
+                page_table[j] = page_table[j + 1];
+            }
+            page_table[frame_size - 1] = page;
+            page_faults++;
+        }
+    }
+
+    return page_faults;
+}
+
+// Optimal Page Replacement Algorithm
+int optimal_page_faults(int reference_string[], int n, int frame_size) {
+    int page_table[frame_size];
+    int page_faults = 0;
+
+    for (int i = 0; i < frame_size; i++) {
+        page_table[i] = -1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        bool page_found = false;
+        int page = reference_string[i];
+
+        for (int j = 0; j < frame_size; j++) {
+            if (page_table[j] == page) {
+                page_found = true;
+                break;
+            }
+        }
+
+        if (!page_found) {
+            int replace_index = -1;
+            int furthest_used = -1;
+
+            for (int j = 0; j < frame_size; j++) {
+                int page_in_memory = page_table[j];
+                int next_use = n;  // Default to the last occurrence
+
+                for (int k = i + 1; k < n; k++) {
+                    if (reference_string[k] == page_in_memory) {
+                        next_use = k;
+                        break;
+                    }
+                }
+
+                if (next_use > furthest_used) {
+                    furthest_used = next_use;
+                    replace_index = j;
+                }
+            }
+
+            page_table[replace_index] = page;
+            page_faults++;
+        }
+    }
+
+    return page_faults;
+}
+
+int main() {
+    int reference_string[] = {5, 2, 3, 3, 1, 2, 5, 1, 2, 1, 4, 5};
+    int n = sizeof(reference_string) / sizeof(reference_string[0]);
+    int frame_size = 3;
+
+    int fifo_faults = fifo_page_faults(reference_string, n, frame_size);
+    int lru_faults = lru_page_faults(reference_string, n, frame_size);
+    int optimal_faults = optimal_page_faults(reference_string, n, frame_size);
+
+    printf("FIFO Page Faults: %d\n", fifo_faults);
+    printf("LRU Page Faults: %d\n", lru_faults);
+    printf("Optimal Page Faults: %d\n", optimal_faults);
+
+    return 0;
+}
+
+
+
+
+
+********************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
